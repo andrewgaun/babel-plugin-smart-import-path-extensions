@@ -1,0 +1,55 @@
+{
+  "name": "babel-plugin-smart-import-path-extensions",
+  "version": "0.1.0",
+  "description": "Babel plugin to correctly add missing file extensions to import statements",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc index.ts",
+    "lint": "ts-standard",
+    "fix": "ts-standard --fix",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewgaun/babel-plugin-smart-import-path-extensions.git"
+  },
+  "keywords": [
+    "babel",
+    "plugin",
+    "smart",
+    "path",
+    "extensions"
+  ],
+  "author": "andrewgaun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andrewgaun/babel-plugin-smart-import-path-extensions/issues"
+  },
+  "ts-standard": {
+    "ignore": [
+      "dist"
+    ]
+  },
+  "files": [
+    "dist"
+ ],
+  "homepage": "https://github.com/andrewgaun/babel-plugin-smart-import-path-extensions#readme",
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/helper-plugin-utils": "^7.26.5",
+    "@babel/traverse": "^7.26.10",
+    "@types/babel__core": "^7.20.5",
+    "@types/babel__helper-plugin-utils": "^7.10.3",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.7.5",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "babel-plugin-tester": "^11.0.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "ts-standard": "^12.0.2",
+    "typescript": "^5.6.3"
+  }
+}
