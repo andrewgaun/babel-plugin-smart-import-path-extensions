@@ -1,10 +1,10 @@
 {
   "name": "babel-plugin-smart-import-path-extensions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Babel plugin to correctly add missing file extensions to import statements",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc index.ts",
+    "build": "tsc index.ts --outdir dist",
     "lint": "ts-standard",
     "fix": "ts-standard --fix",
     "test": "jest"
@@ -17,6 +17,7 @@
     "babel",
     "plugin",
     "smart",
+    "import",
     "path",
     "extensions"
   ],

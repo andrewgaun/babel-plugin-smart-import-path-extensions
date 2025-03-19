@@ -16,21 +16,29 @@ pluginTester({
     'should not convert relative paths if file does not exist': {
       code: 'import foo from "./no-found";',
       output: 'import foo from "./no-found";'
+    },
+    'should prefer exact paths over extensions': {
+      code: 'import foo from "./exact-test/empty";',
+      output: 'import foo from "./exact-test/empty";'
+    },
+    'should keep extension if included': {
+      code: 'import foo from "./exact-test/empty.js";',
+      output: 'import foo from "./exact-test/empty.js";'
     }
   }
 })
 
 pluginTester({
   plugin,
-  pluginOptions: { extensions: ['ts', 'json'] },
+  pluginOptions: { extensions: ['b', 'a'] },
   tests: {
-    'should convert if existing file is in the extensions list': {
+    'should convert if only a single match exist': {
       code: 'import foo from "../package";',
       output: 'import foo from "../package.json";'
     },
-    'should not convert if existing file is not in the extensions list': {
-      code: 'import foo from "./smart-import-path-extensions.spec";',
-      output: 'import foo from "./smart-import-path-extensions.spec";'
+    'should prioritize based on extensions order': {
+      code: 'import foo from "./priority-test/empty";',
+      output: 'import foo from "./priority-test/empty.b";'
     }
   }
 })

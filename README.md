@@ -1,5 +1,12 @@
 # babel-plugin-smart-import-path-extensions
-Babel plugin to correctly add missing file extensions to import statements
+Babel plugin to correctly add missing file extensions to import statements. 
+
+## How does it work?
+1. The plugin will see what files exist within a relative import's path directory which match the module file
+2. If a file matches the import path exact, no replacement is done
+3. If only one file makes sense, the path will be updated to point direct to that file 
+4. If several matches are found, the first matching extention from the `extentions` options will be used.
+5. If we don't find a suitable file (we had no matches or several matches all outside of the `extentions` options) a warning is printed
 
 ## Example
 Assume we have these three files: `./foo.tsx`, `./foobar.js`, and 
@@ -39,7 +46,3 @@ Passing the  `['js', 'ts', 'jsx', 'tsx']`, you can simply add `smart-import-path
     "plugins": ["smart-import-path-extensions", {"extensions": ["js","jsx","json"]}]
 }
 ```
-
-## Testing
-
-`npm test`

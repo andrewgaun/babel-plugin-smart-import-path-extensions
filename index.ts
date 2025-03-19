@@ -1,13 +1,13 @@
 import { declare } from '@babel/helper-plugin-utils'
 import { type PluginObj, type PluginPass, types } from '@babel/core'
-import { existsSync } from 'fs'
-import { resolve, extname, dirname } from 'path'
+import { readdirSync } from 'fs'
+import { resolve, dirname, basename } from 'path'
 import { type VisitNode } from '@babel/traverse'
 
 const { importDeclaration, stringLiteral } = types
 
 const updateImport = ({
-  extensions = ['js', 'ts', 'jsx', 'tsx']
+  extensions = ['js', 'ts', 'jsx', 'tsx', 'd.ts']
 }): VisitNode<PluginPass, types.ImportDeclaration> => {
   return (
     path, { file: { opts: { filename } } }
@@ -24,33 +24,39 @@ const updateImport = ({
       return
     }
 
-    const dirPath = resolve(dirname(filename), module)
+    const fullPath = resolve(dirname(filename), module)
+    const dirPath = dirname(fullPath)
+    const modulePrefix = basename(module)
 
-    // If we see an extension we are expecting, skip our tests
-    const hasModuleExt =
-      extname(module).length !== 0 && extensions.includes(extname(module))
-    if (hasModuleExt) {
+    // List all files that match exactly
+    const possibleFiles = readdirSync(dirPath).filter(name =>
+      name === modulePrefix || name.startsWith(`${modulePrefix}.`))
+
+    // Exact match always wins
+    if (possibleFiles.includes(modulePrefix)) {
       return
     }
 
-    // Can we literally find it?
-    const isLiteral = existsSync(dirPath)
-    if (isLiteral) {
-      return
+    let winner: string | null
+    if (possibleFiles.length === 1) {
+      winner = `${dirname(module)}/${possibleFiles[0]}`
+    } else {
+      winner = extensions.filter(ext =>
+        possibleFiles.includes(`${modulePrefix}.${ext}`)
+      )?.[0]
+      winner = winner !== undefined ? `${module}.${winner}` : null
     }
-
-    const extension = extensions.find(extension =>
-      existsSync(`${dirPath}.${extension}`)
-    )
 
     // If we found a valid file, update the path
-    if (extension) {
+    if (winner !== null) {
       path.replaceWith(
         importDeclaration(
           ...[specifiers],
-          stringLiteral(`${module}.${extension}`)
+          stringLiteral(`${winner}`)
         )
       )
+    } else {
+      console.warn(`Failed to find a good match for prefix ${fullPath}`)
     }
   }
 }
