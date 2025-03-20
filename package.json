@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-smart-import-path-extensions",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Babel plugin to correctly add missing file extensions to import statements",
   "main": "./dist/index.js",
   "scripts": {
@@ -35,9 +35,11 @@
     "dist"
  ],
   "homepage": "https://github.com/andrewgaun/babel-plugin-smart-import-path-extensions#readme",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.26.10",
-    "@babel/helper-plugin-utils": "^7.26.5",
+    "@babel/helper-plugin-utils": "^7.26.5"
+  },
+  "devDependencies": {
     "@babel/traverse": "^7.26.10",
     "@types/babel__core": "^7.20.5",
     "@types/babel__helper-plugin-utils": "^7.10.3",

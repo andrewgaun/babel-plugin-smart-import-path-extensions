@@ -1,8 +1,8 @@
 import { declare } from '@babel/helper-plugin-utils'
 import { type PluginObj, type PluginPass, types } from '@babel/core'
+import { type VisitNode } from '@babel/traverse'
 import { readdirSync } from 'fs'
 import { resolve, dirname, basename } from 'path'
-import { type VisitNode } from '@babel/traverse'
 
 const { importDeclaration, stringLiteral } = types
 
@@ -26,25 +26,25 @@ const updateImport = ({
 
     const fullPath = resolve(dirname(filename), module)
     const dirPath = dirname(fullPath)
-    const modulePrefix = basename(module)
+    const moduleName = basename(module)
 
-    // List all files that match exactly
-    const possibleFiles = readdirSync(dirPath).filter(name =>
-      name === modulePrefix || name.startsWith(`${modulePrefix}.`))
+    // Find possible matches
+    const regExp = new RegExp(`${moduleName}(\\..*)?$`)
+    const possibleFiles = readdirSync(dirPath).filter(fileName => regExp.test(fileName))
 
     // Exact match always wins
-    if (possibleFiles.includes(modulePrefix)) {
+    if (possibleFiles.includes(moduleName)) {
       return
     }
 
-    let winner: string | null
+    let winner
     if (possibleFiles.length === 1) {
       winner = `${dirname(module)}/${possibleFiles[0]}`
     } else {
-      winner = extensions.filter(ext =>
-        possibleFiles.includes(`${modulePrefix}.${ext}`)
-      )?.[0]
-      winner = winner !== undefined ? `${module}.${winner}` : null
+      const winningExts = extensions.filter(ext =>
+        possibleFiles.includes(`${moduleName}.${ext}`)
+      )
+      winner = winningExts.length > 0 ? `${module}.${winningExts[0]}` : null
     }
 
     // If we found a valid file, update the path
